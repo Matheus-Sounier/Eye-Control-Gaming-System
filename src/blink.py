@@ -44,4 +44,21 @@ class CameraStream:
         self._thread.join()   
         self.cap.release()
 
-cam = CameraStream(0)
+MODEL_PATH = "models/face_landmarker.task"
+
+BaseOptions           = python.BaseOptions
+FaceLandmarker        = vision.FaceLandmarker
+FaceLandmarkerOptions = vision.FaceLandmarkerOptions
+VisionRunningMode     = vision.RunningMode
+
+options = FaceLandmarkerOptions(
+    base_options=BaseOptions(model_asset_path=MODEL_PATH),
+    running_mode=VisionRunningMode.VIDEO,
+    num_faces=1,
+    output_face_blendshapes=True
+)
+
+detector = FaceLandmarker.create_from_options(options)
+
+EYE_VERTICALS  = [(160, 144), (159, 145), (158, 153)]
+EYE_HORIZONTAL = (33, 133)
