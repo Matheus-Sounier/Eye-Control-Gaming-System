@@ -62,3 +62,19 @@ detector = FaceLandmarker.create_from_options(options)
 
 EYE_VERTICALS  = [(160, 144), (159, 145), (158, 153)]
 EYE_HORIZONTAL = (33, 133)
+
+BLINK_THRESHOLD     = 0.30
+PRESS_HOLD_TIME     = 0.0008
+RELEASE_HOLD_TIME   = 0.0004
+PROCESS_EVERY_N_FRAMES = 2 
+PLOT_EVERY_N_FRAMES = 4 
+DISPLAY_WINDOW      = True
+
+blinking         = False
+eye_closed_since = None
+eye_open_since   = None
+frame_count      = 0
+last_blink_score = 0.0
+last_landmarks   = None
+
+space_held = False
