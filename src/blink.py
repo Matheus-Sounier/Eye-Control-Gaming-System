@@ -81,7 +81,7 @@ space_held = False
 
 plotY = LivePlot(640, 360, [0, 60], invert=True)
 
-## It causes delay
+## It causes a lot of delay so I commented this shit
 def eye_aspect_ratio(vertical_pairs, horizontal_pair, landmarks, w, h):
     """this function calculates the Eye Aspect Ratio"""
     used_points = set()
@@ -106,3 +106,34 @@ def eye_aspect_ratio(vertical_pairs, horizontal_pair, landmarks, w, h):
     return (vertical_sum / len(vertical_pairs)) / horizontal, landmark_points
 
 cam = CameraStream(0)
+
+while True:
+    success, frame = cam.read()
+    if not success or frame is None:
+        continue
+
+    frame_count += 1
+    h, w, _ = frame.shape
+
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    mp_image  = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
+
+    frame_timestamp_ms = int(time.perf_counter() * 1000)
+    result = detector.detect_for_video(mp_image, frame_timestamp_ms)
+
+    if not (result.face_landmarks and result.face_blendshapes):
+        if DISPLAY_WINDOW:
+            print("Put the eye on the camera")
+            cv2.imshow("BlinkDetection", frame)
+            if cv2.waitKey(1) == 27:
+                break
+        continue
+
+    blendshapes = {
+        b.category_name: b.score
+        for b in result.face_blendshapes[0]
+    }
+
+    blink_score = blendshapes.get("eyeBlinkRight", 0)
+
+    landmarks   = result.face_landmarks[0]
