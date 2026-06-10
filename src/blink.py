@@ -137,3 +137,28 @@ while True:
     blink_score = blendshapes.get("eyeBlinkRight", 0)
 
     landmarks   = result.face_landmarks[0]
+
+    _, right_points = eye_aspect_ratio(
+        EYE_VERTICALS, EYE_HORIZONTAL, landmarks, w, h
+    )
+
+    for point in right_points.values():
+        cv2.circle(frame, point, 3, (255, 0, 255), cv2.FILLED)
+    for top, bottom in EYE_VERTICALS: 
+        cv2.line(frame, right_points[top], right_points[bottom], (0, 255, 0), 2)
+    cv2.line(
+        frame,
+        right_points[EYE_HORIZONTAL[0]],
+        right_points[EYE_HORIZONTAL[1]],
+        (255, 0, 0), 2
+    )
+
+
+## This shows the status, whether the eye is open or not in the webcam and the blink score
+    status = "Closed" if blinking else "Opened"
+    cv2.putText(frame, f"BLINK: {blink_score:.3f}", (30, 40),
+                cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 0), 2)
+    cv2.putText(frame, f"Eye: {status}", (30, 80),
+                cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 255), 2)
+
+    now = time.perf_counter()
