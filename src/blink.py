@@ -185,3 +185,16 @@ while True:
                     space_held = False
                 blinking = False
                 eye_open_since = None
+
+    # if frame_count % PLOT_EVERY_N_FRAMES == 0:
+    #     imgPlot = plotY.update(int(blink_score * 100))
+    #     cv2.imshow("Plot", imgPlot)
+
+    cv2.imshow("BlinkDetection", frame)
+    if cv2.waitKey(1) == 27:
+        break
+
+space_held = False
+cam.release()
+cv2.destroyAllWindows()
+detector.close()
