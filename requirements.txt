@@ -3,3 +3,5 @@ mediapipe==0.10.35
 opencv-contrib-python==4.13.0.92
 keyboard==0.13.5
 numpy>=2.0
+pygrabber>=0.0.5
+wmi>=1.5.1
