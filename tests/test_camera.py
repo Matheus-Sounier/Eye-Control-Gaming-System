@@ -11,7 +11,7 @@ for backend_name, backend in [
 
     for i in range(5):
         print(f"Testing index {i}")
-
+        print(f" {i}")
         cap = cv2.VideoCapture(i, backend)
 
         opened = cap.isOpened()
