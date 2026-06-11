@@ -1,12 +1,12 @@
-import cv2
+import cv2 
 import mediapipe as mp
 import time
 import threading
 import keyboard
-from math import dist # ear = landmarks
+from math import dist
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
-from cvzone.PlotModule import LivePlot
+# from cvzone.PlotModule import LivePlot
 
 class CameraStream:
     """Reads frames from a camera in a background thread to avoid blocking."""
@@ -79,31 +79,31 @@ last_landmarks   = None
 
 space_held = False
 
-plotY = LivePlot(640, 360, [0, 60], invert=True)
+# plotY = LivePlot(640, 360, [0, 60], invert=True)
 
-## It causes a lot of delay so I commented this shit
-def eye_aspect_ratio(vertical_pairs, horizontal_pair, landmarks, w, h):
-    """this function calculates the Eye Aspect Ratio"""
-    used_points = set()
-    for pair in vertical_pairs:
-        used_points.update(pair)
-    used_points.update(horizontal_pair)
+## It causes delay
+# def eye_aspect_ratio(vertical_pairs, horizontal_pair, landmarks, w, h):
+#     """this function calculates the Eye Aspect Ratio"""
+#     used_points = set()
+#     for pair in vertical_pairs:
+#         used_points.update(pair)
+#     used_points.update(horizontal_pair)
 
-    landmark_points = {}
-    for idx in used_points:
-        lm = landmarks[idx]
-        landmark_points[idx] = (int(lm.x * w), int(lm.y * h))
+#     landmark_points = {}
+#     for idx in used_points:
+#         lm = landmarks[idx]
+#         landmark_points[idx] = (int(lm.x * w), int(lm.y * h))
 
-    vertical_sum = sum(
-        dist(landmark_points[top], landmark_points[bottom])
-        for top, bottom in vertical_pairs
-    )
-    horizontal = dist(
-        landmark_points[horizontal_pair[0]],
-        landmark_points[horizontal_pair[1]]
-    )
+#     vertical_sum = sum(
+#         dist(landmark_points[top], landmark_points[bottom])
+#         for top, bottom in vertical_pairs
+#     )
+#     horizontal = dist(
+#         landmark_points[horizontal_pair[0]],
+#         landmark_points[horizontal_pair[1]]
+#     )
 
-    return (vertical_sum / len(vertical_pairs)) / horizontal, landmark_points
+#     return (vertical_sum / len(vertical_pairs)) / horizontal, landmark_points
 
 cam = CameraStream(0)
 
@@ -138,27 +138,50 @@ while True:
 
     landmarks   = result.face_landmarks[0]
 
-    _, right_points = eye_aspect_ratio(
-        EYE_VERTICALS, EYE_HORIZONTAL, landmarks, w, h
-    )
+    # _, right_points = eye_aspect_ratio(
+    #     EYE_VERTICALS, EYE_HORIZONTAL, landmarks, w, h
+    # )
 
-    for point in right_points.values():
-        cv2.circle(frame, point, 3, (255, 0, 255), cv2.FILLED)
-    for top, bottom in EYE_VERTICALS: 
-        cv2.line(frame, right_points[top], right_points[bottom], (0, 255, 0), 2)
-    cv2.line(
-        frame,
-        right_points[EYE_HORIZONTAL[0]],
-        right_points[EYE_HORIZONTAL[1]],
-        (255, 0, 0), 2
-    )
+    # for point in right_points.values():
+    #     cv2.circle(frame, point, 3, (255, 0, 255), cv2.FILLED)
+    # for top, bottom in EYE_VERTICALS: 
+    #     cv2.line(frame, right_points[top], right_points[bottom], (0, 255, 0), 2)
+    # cv2.line(
+    #     frame,
+    #     right_points[EYE_HORIZONTAL[0]],
+    #     right_points[EYE_HORIZONTAL[1]],
+    #     (255, 0, 0), 2
+    # )
 
 
 ## This shows the status, whether the eye is open or not in the webcam and the blink score
-    status = "Closed" if blinking else "Opened"
-    cv2.putText(frame, f"BLINK: {blink_score:.3f}", (30, 40),
-                cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 0), 2)
-    cv2.putText(frame, f"Eye: {status}", (30, 80),
-                cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 255), 2)
+    # status = "Closed" if blinking else "Opened"
+    # cv2.putText(frame, f"BLINK: {blink_score:.3f}", (30, 40),
+    #             cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 0), 2)
+    # cv2.putText(frame, f"Eye: {status}", (30, 80),
+    #             cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 255), 2)
 
     now = time.perf_counter()
+            
+    if blink_score > BLINK_THRESHOLD:
+        eye_open_since = None
+        if not blinking:
+            if eye_closed_since is None:
+                eye_closed_since = now
+            elif now - eye_closed_since >= PRESS_HOLD_TIME:
+                if not space_held:
+                    keyboard.press("space")
+                    space_held = True
+                blinking = True
+                eye_closed_since = None
+    else:
+        eye_closed_since = None
+        if blinking:
+            if eye_open_since is None:
+                eye_open_since = now
+            elif now - eye_open_since >= RELEASE_HOLD_TIME:
+                if space_held:
+                    keyboard.release("space")
+                    space_held = False
+                blinking = False
+                eye_open_since = None
