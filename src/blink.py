@@ -81,7 +81,7 @@ space_held = False
 
 # plotY = LivePlot(640, 360, [0, 60], invert=True)
 
-## It causes delay
+# It causes delay
 # def eye_aspect_ratio(vertical_pairs, horizontal_pair, landmarks, w, h):
 #     """this function calculates the Eye Aspect Ratio"""
 #     used_points = set()
@@ -154,7 +154,7 @@ while True:
     # )
 
 
-## This shows the status, whether the eye is open or not in the webcam and the blink score
+# This shows the status, whether the eye is open or not in the webcam and the blink score
     # status = "Closed" if blinking else "Opened"
     # cv2.putText(frame, f"BLINK: {blink_score:.3f}", (30, 40),
     #             cv2.FONT_HERSHEY_TRIPLEX, 1, (0, 255, 0), 2)
