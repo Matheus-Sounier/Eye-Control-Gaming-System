@@ -1,10 +1,10 @@
 <img width="1000" height="500" alt="Image" src="./img/gameplay.gif" />
 
-# Blink Controller for Geometry Dash
+# Blink Controller
 
 A real-time eye blink controller built with **Python**, **MediaPipe**, **OpenCV**, and **CVZone**.
 
-This project allows players to control Geometry Dash using eye blinks captured by a webcam. Instead of pressing a physical key, the system detects when the player's eye closes and automatically triggers the **Space** key.
+This project allows players to use space using eye blinks captured by a webcam. Instead of pressing a physical key, the system detects when the player's eye closes and automatically triggers the **Space** key.
 
 ---
 
@@ -16,7 +16,6 @@ This project allows players to control Geometry Dash using eye blinks captured b
 - Face landmark tracking using MediaPipe
 - BlendShape facial analysis
 - LivePlot visualization
-- Hands-free Geometry Dash gameplay
 - Webcam-based interaction
 
 ---
