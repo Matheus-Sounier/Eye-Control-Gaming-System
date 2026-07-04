@@ -149,7 +149,3 @@ The graph helps visualize:
 - Detection threshold behavior
 
 The Y-axis represents the eye openness level measured by the system.
-
-<img width="400" height="500" alt="Image" src="./img/close-eye.png" />
-<img width="400" height="500" alt="Image" src="./img/open-eye.png" />
----
